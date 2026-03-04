@@ -1,0 +1,68 @@
+<div class="qr-viewer-container">
+  <div class="header">
+    <h1>🎯 QR Code Viewer</h1>
+    <p>View and manage QR codes for all tables</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <p>⏳ Loading tables...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>❌ {{ error }}</p>
+    <button (click)="loadTables()">🔄 Retry</button>
+  </div>
+
+  <!-- Tables Grid -->
+  <div *ngIf="!loading && !error && tables.length > 0" class="tables-grid">
+    <div *ngFor="let table of tables" class="table-card">
+      <div class="table-header">
+        <h2>Table {{ table.tableNumber }}</h2>
+      </div>
+
+      <!-- QR Code Image -->
+      <div class="qr-code-container">
+        <img *ngIf="table.qrCode" [src]="table.qrCode" 
+             [alt]="'QR Code for Table ' + table.tableNumber" 
+             class="qr-image" />
+      </div>
+
+      <!-- Table ID Display -->
+      <div class="table-id">
+        <p><strong>Table ID:</strong></p>
+        <code>{{ table._id }}</code>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-copy" (click)="copyLink(table._id, table.tableNumber)" title="Copy ordering link">
+          📋 Copy Link
+        </button>
+        <button class="btn btn-download" (click)="downloadQR(table)" title="Download QR code">
+          📥 Download
+        </button>
+        <button class="btn btn-print" (click)="printQR(table)" title="Print QR code">
+          🖨️ Print
+        </button>
+      </div>
+
+      <!-- Instructions -->
+      <div class="instructions">
+        <h4>How to use:</h4>
+        <ol>
+          <li>Download or print the QR code</li>
+          <li>Place on the table</li>
+          <li>Customers scan to order</li>
+          <li>Opens: <code>/order?tableId=...</code></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && tables.length === 0" class="empty-state">
+    <p>📭 No tables found. Create tables from admin dashboard first!</p>
+  </div>
+</div>

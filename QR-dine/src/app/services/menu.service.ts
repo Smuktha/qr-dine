@@ -16,7 +16,7 @@ export interface MenuItem {
   providedIn: 'root'
 })
 export class MenuService {
-  private apiUrl = 'http://localhost:5000/api/menu';
+  private apiUrl = 'https://qr-dine-backend-ek2s.onrender.com/api/menu';
   private refreshNeeded$ = new Subject<void>(); // 👈 new line
 
   get refreshNeeded() {

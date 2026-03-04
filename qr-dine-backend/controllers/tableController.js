@@ -33,7 +33,7 @@ export const addTable = asyncHandler(async (req, res) => {
     const newTable = new Table({ tableNumber });
 
     // Generate QR code
-    const frontendURL = `${process.env.FRONTEND_URL}/order?tableId=${newTable._id}`;
+    const frontendURL = `${process.env.FRONTEND_URL}/?tableId=${newTable._id}`;
     const qrCodeData = await QRCode.toDataURL(frontendURL);
     newTable.qrCode = qrCodeData;
 
@@ -77,7 +77,7 @@ export const updateTable = asyncHandler(async (req, res) => {
       table.tableNumber = tableNumber;
       
       // Regenerate QR code with new table number
-      const frontendURL = `${process.env.FRONTEND_URL}/order?tableId=${table._id}`;
+      const frontendURL = `${process.env.FRONTEND_URL}/?tableId=${table._id}`;
       const qrCodeData = await QRCode.toDataURL(frontendURL);
       table.qrCode = qrCodeData;
     }
@@ -94,12 +94,30 @@ export const getTableByNumber = asyncHandler(async (req, res) => {
     const table = await Table.findOne({ tableNumber: req.params.tableNumber });
     
     if (!table) {
-      res.status(404);
-      throw new Error("Table not found");
+      return res.status(404).json({ message: "Table not found" });
     }
     
     res.json(table);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch table", error: error.message });
+  }
+});
+
+// Generate QR codes for all tables (regenerate missing QR codes)
+export const generateAllQRCodes = asyncHandler(async (req, res) => {
+  try {
+    const tables = await Table.find();
+    
+    for (let table of tables) {
+      // Generate QR code for each table
+      const frontendURL = `${process.env.FRONTEND_URL}/?tableId=${table._id}`;
+      const qrCodeData = await QRCode.toDataURL(frontendURL);
+      table.qrCode = qrCodeData;
+      await table.save();
+    }
+    
+    res.json({ message: `QR codes generated for ${tables.length} tables`, tables });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to generate QR codes", error: error.message });
   }
 });

@@ -18,6 +18,8 @@ export class CartComponent implements OnInit {
   orderPlaced = false;
   tableNumber: string = '';
   tableId: string = '';
+  errorMessage = '';
+  loading = false;
 
   constructor(
     private cartService: CartService,
@@ -26,10 +28,17 @@ export class CartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get table number from URL query params
+    this.loading = true;
+    // Get tableId directly from URL query params (set by QR code)
     this.route.queryParams.subscribe(params => {
-      this.tableNumber = params['table'] || '1'; // default to table 1
-      this.fetchTableId();
+      this.tableId = params['tableId'] || localStorage.getItem('tableId') || '';
+      
+      if (this.tableId) {
+        console.log('✅ Table ID from QR:', this.tableId);
+      } else {
+        this.errorMessage = 'Invalid access. Please scan the table QR code.';
+      }
+      this.loading = false;
     });
 
     this.loadCart();
@@ -37,20 +46,6 @@ export class CartComponent implements OnInit {
       this.cartItems = items;
       this.total = this.cartService.getTotal();
     });
-  }
-
-  fetchTableId() {
-    // Get table ID from backend using table number
-    this.http.get<any>(`http://localhost:5000/api/tables/${this.tableNumber}`)
-      .subscribe({
-        next: (table) => {
-          this.tableId = table._id;
-          console.log('✅ Table loaded:', table);
-        },
-        error: (err) => {
-          console.error('❌ Failed to load table:', err);
-        }
-      });
   }
 
   loadCart() {
@@ -72,7 +67,7 @@ export class CartComponent implements OnInit {
 
   openPopup() {
     if (!this.tableId) {
-      alert('Table information not loaded. Please refresh the page.');
+      this.errorMessage = 'Table information not loaded. Please refresh the page.';
       return;
     }
     this.showPopup = true;
@@ -84,10 +79,10 @@ export class CartComponent implements OnInit {
 
   placeOrder() {
     if (!this.tableId) {
-      alert('Table information missing!');
+      this.errorMessage = 'Table information missing!';
       return;
     }
-
+    this.loading = true;
     this.cartService.placeOrder(this.tableId).subscribe({
       next: (response) => {
         console.log('✅ Order placed successfully:', response);
@@ -95,10 +90,12 @@ export class CartComponent implements OnInit {
         this.showPopup = false;
         this.cartService.clearCart();
         setTimeout(() => (this.orderPlaced = false), 3000);
+        this.loading = false;
       },
       error: (error) => {
         console.error('❌ Order failed:', error);
-        alert('Failed to place order. Please try again.');
+        this.errorMessage = 'Failed to place order. Please try again.';
+        this.loading = false;
       }
     });
   }

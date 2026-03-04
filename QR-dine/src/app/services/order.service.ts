@@ -26,7 +26,7 @@ export interface Order {
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:5000/api/orders';
+  private apiUrl = 'https://qr-dine-backend-ek2s.onrender.com/api/orders';
   private socket: Socket;
   private newOrderSubject = new Subject<Order>();
   
@@ -34,7 +34,7 @@ export class OrderService {
 
   constructor(private http: HttpClient) {
     // Initialize Socket.IO connection
-    this.socket = io('http://localhost:5000', {
+    this.socket = io('https://qr-dine-backend-ek2s.onrender.com', {
       transports: ['websocket', 'polling']
     });
 

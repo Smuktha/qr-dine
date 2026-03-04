@@ -33,6 +33,19 @@
       <span class="tab-icon">🍽️</span>
       Manage Menu
     </button>
+    
+    <button 
+      [class.active]="currentPage === 'qr-codes'" 
+      (click)="navigate('qr-codes')"
+      class="tab-btn">
+      <span class="tab-icon">📱</span>
+      QR Codes
+    </button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div *ngIf="toastMessage" class="toast-notification" [class.show]="toastVisible" role="status" aria-live="polite">
+    {{ toastMessage }}
   </div>
 
   <!-- ========== ORDERS PAGE ========== -->
@@ -218,6 +231,75 @@
           </div>
         </ng-template>
       </div>
+    </div>
+  </div>
+
+  <!-- ========== QR CODES PAGE ========== -->
+  <div class="page-content" *ngIf="currentPage === 'qr-codes'">
+    <h2 class="page-title">Table QR Codes</h2>
+    
+    <div class="qr-codes-section">
+      <div class="qr-info-box">
+        <p><strong>📱 How to use:</strong> Print or download QR codes, place them on each table. Customers scan to start ordering!</p>
+      </div>
+
+      <div class="add-table-form">
+        <h3>Add New Table</h3>
+        <div class="form-row">
+          <input 
+            type="number" 
+            [(ngModel)]="newTableNumber" 
+            placeholder="Table Number (e.g., 6)" 
+            class="table-input" />
+          <button class="btn-add-table" (click)="addNewTable()">
+            ➕ Add Table
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-regenerate" (click)="regenerateQRCodes()">
+        🔄 Regenerate All QR Codes
+      </button>
+
+      <div class="tables-grid" *ngIf="tables.length > 0; else noTables">
+        <div class="table-qr-card" *ngFor="let table of tables">
+          <h3>Table {{ table.tableNumber }}</h3>
+          
+          <div class="qr-display">
+            <img 
+              *ngIf="table.qrCode" 
+              [src]="table.qrCode.startsWith('data:') ? table.qrCode : 'data:image/png;base64,' + table.qrCode" 
+              [alt]="'QR Code for Table ' + table.tableNumber"
+              class="qr-code-img" />
+            <div *ngIf="!table.qrCode" class="qr-placeholder">
+              QR Code not available
+            </div>
+          </div>
+
+          <div class="table-id-display">
+            <small>ID: {{ table._id }}</small>
+          </div>
+
+          <div class="qr-actions">
+            <button class="btn-action btn-copy" (click)="copyOrderLink(table)">
+              📋 Copy Link
+            </button>
+            <button class="btn-action btn-print" (click)="printQR(table)">
+              🖨️ Print
+            </button>
+            <button class="btn-action btn-delete" (click)="deleteTable(table)">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noTables>
+        <div class="empty-state">
+          <div class="empty-icon">📱</div>
+          <p>No tables configured yet</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

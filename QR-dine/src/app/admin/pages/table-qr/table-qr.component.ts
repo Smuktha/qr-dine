@@ -15,7 +15,7 @@ export class TableQrComponent implements OnInit {
 
   ngOnInit() {
     // 🔗 Replace with your actual deployment URL or local dev URL
-    const url: string = `https://your-app-url.com/order?$table={this.tableNumber}`;
+    const url: string = `https://your-app-url.com/?tableId=${this.tableNumber}`;
 
     // ✅ Generate QR code for the given table
     QRCode.toDataURL(url, { errorCorrectionLevel: 'M', width: 200 })

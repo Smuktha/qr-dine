@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { trigger, transition, animate, keyframes, style } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +28,7 @@ import { Subscription } from 'rxjs';
 export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router, 
+    private route: ActivatedRoute,
     private cartService: CartService,
     private menuService: MenuService
   ) {}
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   searchText: string = '';
   selectedCategory: string = 'All';
    isLoading: boolean = true;
+  errorMessage: string = '';
 
   // 🎞️ slideshow
   foodImages: string[] = [
@@ -64,6 +66,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   private refreshSub!: Subscription;
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const tableId = params['tableId'];
+      if (tableId) {
+        localStorage.setItem('tableId', tableId);
+      }
+    });
+
     // start slideshow
     this.slideTimer = setInterval(() => {
       this.currentImageIndex = (this.currentImageIndex + 1) % this.foodImages.length;
@@ -90,21 +99,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
  loadMenuItems() {
-    this.isLoading = true; // Set loading to true
+    this.isLoading = true;
+    this.errorMessage = '';
     this.menuService.getItems().subscribe({
       next: (items) => {
-        // Map backend items with full image URLs
         this.products = items.map(item => ({
           ...item,
-          imageUrl: item.image ? `http://localhost:5000/uploads/${item.image}` : undefined
+          imageUrl: item.image ? `https://qr-dine-backend-ek2s.onrender.com/uploads/${item.image}` : undefined
         }));
 
         this.applyFilters();
-        this.isLoading = false; // Set loading to false when done
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('❌ Failed to load menu items:', err);
-        this.isLoading = false; // Set loading to false even on error
+        this.errorMessage = 'Failed to load menu items. Please try again later.';
+        this.isLoading = false;
       }
     });
   }
@@ -141,6 +151,7 @@ addToCart(product: any) {
 }
 
   goToCart() {
-    this.router.navigate(['/cart']);
+    const tableId = localStorage.getItem('tableId');
+    this.router.navigate(['/cart'], tableId ? { queryParams: { tableId } } : undefined);
   }
 }

@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^6.0.0",
+    "jasmine-core": "^6.1.0"
   }
 }

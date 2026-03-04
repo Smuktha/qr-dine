@@ -603,3 +603,270 @@ select.form-control option {
     width: 100%;
   }
 }
+
+/* ===== QR CODES SECTION ===== */
+.qr-codes-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.qr-info-box {
+  background: rgba(255, 140, 66, 0.1);
+  border-left: 4px solid #FF8C42;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  color: #e0e0e0;
+  font-size: 15px;
+}
+
+.add-table-form {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 140, 66, 0.3);
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.add-table-form h3 {
+  margin: 0 0 20px 0;
+  color: #FF8C42;
+  font-size: 20px;
+  text-align: center;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-input {
+  flex: 1;
+  max-width: 300px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 140, 66, 0.3);
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.table-input:focus {
+  outline: none;
+  border-color: #FF8C42;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.table-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-add-table {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-add-table:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 140, 66, 0.4);
+}
+
+.btn-add-table:active {
+  transform: scale(0.98);
+}
+
+.btn-regenerate {
+  display: block;
+  margin: 0 auto 30px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-regenerate:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+}
+
+.btn-regenerate:active {
+  transform: scale(0.98);
+}
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+  margin: 20px 0;
+}
+
+.table-qr-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 140, 66, 0.3);
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.table-qr-card:hover {
+  border-color: #FF8C42;
+  background: rgba(255, 140, 66, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(255, 140, 66, 0.2);
+}
+
+.table-qr-card h3 {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  color: #FF8C42;
+}
+
+.qr-display {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code-img {
+  max-width: 100%;
+  max-height: 100%;
+  border: 2px solid #ddd;
+}
+
+.qr-placeholder {
+  color: #999;
+  font-size: 14px;
+}
+
+.table-id-display {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: 6px;
+  margin: 15px 0;
+  word-break: break-all;
+  color: #aaa;
+}
+
+.qr-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-action {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-copy {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.btn-copy:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-print {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.btn-print:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%);
+}
+
+.btn-delete:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(221, 36, 118, 0.4);
+}
+
+@media (max-width: 768px) {
+  .tables-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .qr-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .table-qr-card {
+    padding: 15px;
+  }
+
+  .qr-display {
+    min-height: 200px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .table-input {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .btn-add-table {
+    width: 100%;
+  }
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: #222;
+  color: #fff;
+  padding: 18px 32px;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+  font-size: 1.1rem;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2000;
+  transition: opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
+  transform: translateY(-20px);
+}
+.toast-notification.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}

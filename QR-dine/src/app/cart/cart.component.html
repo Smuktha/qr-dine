@@ -45,4 +45,15 @@
   <div class="success-message" *ngIf="orderPlaced">
     ✅ Your order has been placed successfully!
   </div>
+
+  <!-- LOADING SPINNER -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- ERROR MESSAGE -->
+  <div *ngIf="errorMessage && !loading" class="error-message">
+    {{ errorMessage }}
+  </div>
 </div>

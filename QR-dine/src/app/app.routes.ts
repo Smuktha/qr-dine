@@ -19,6 +19,7 @@ export const routes: Routes = [
   },
 
   { path: '', component: HomeComponent },
+  { path: 'order', component: CartComponent }, // ✅ Order page (QR code links here)
   { path: 'cart', component: CartComponent },
   { path: '**', redirectTo: '' },
 ];

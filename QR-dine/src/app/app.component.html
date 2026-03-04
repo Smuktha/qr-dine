@@ -1,14 +1,14 @@
-<nav class="navbar">
+<nav class="navbar" role="navigation" aria-label="Main Navigation">
   <!-- Logo + Brand -->
   <div class="logo">
-    <img src="assets/logo.png" alt="QR-Dine Logo" class="logo-img">
+    <img src="assets/logo.png" alt="QR-Dine Logo" class="logo-img" />
    
   </div>
 
   <!-- Links -->
   <div class="nav-links">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-    <a routerLink="/cart" routerLinkActive="active">Cart</a>
+    <a (click)="goToHome()" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" style="cursor:pointer;" tabindex="0" aria-label="Go to Home page">Home</a>
+    <a (click)="goToCart()" routerLinkActive="active" style="cursor:pointer;" tabindex="0" aria-label="Go to Cart page">Cart</a>
   </div>
 </nav>
 
