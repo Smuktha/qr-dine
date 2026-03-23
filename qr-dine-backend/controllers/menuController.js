@@ -1,6 +1,10 @@
 import asyncHandler from "express-async-handler";
 import MenuItem from "../models/MenuItem.js";
 
+const getBaseUrl = (req) => {
+  return process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+};
+
 // Add menu item
 export const addMenuItem = asyncHandler(async (req, res) => {
   const { name, category, price, description } = req.body;
@@ -12,18 +16,20 @@ export const addMenuItem = asyncHandler(async (req, res) => {
   const newItem = new MenuItem({ name, category, price, description, image });
 
   const savedItem = await newItem.save();
+  const baseUrl = getBaseUrl(req);
   res.status(201).json({
     ...savedItem.toObject(),
-    imageUrl: savedItem.image ? `http://localhost:5000/uploads/${savedItem.image}` : ""
+    imageUrl: savedItem.image ? `${baseUrl}/uploads/${savedItem.image}` : ""
   });
 });
 
 // Get all menu items
 export const getMenuItems = asyncHandler(async (req, res) => {
+  const baseUrl = getBaseUrl(req);
   const items = await MenuItem.find();
   const itemsWithUrl = items.map(item => ({
     ...item.toObject(),
-    imageUrl: item.image ? `http://localhost:5000/uploads/${item.image}` : ""
+    imageUrl: item.image ? `${baseUrl}/uploads/${item.image}` : ""
   }));
   res.json(itemsWithUrl);
 });
@@ -49,8 +55,9 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
   if (req.file) item.image = req.file.filename;
 
   const updated = await item.save();
+  const baseUrl = getBaseUrl(req);
   res.json({
     ...updated.toObject(),
-    imageUrl: updated.image ? `http://localhost:5000/uploads/${updated.image}` : ""
+    imageUrl: updated.image ? `${baseUrl}/uploads/${updated.image}` : ""
   });
 });
