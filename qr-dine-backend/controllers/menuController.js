@@ -2,7 +2,12 @@ import asyncHandler from "express-async-handler";
 import MenuItem from "../models/MenuItem.js";
 
 const getBaseUrl = (req) => {
-  return process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+  const baseUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+  // Force HTTPS in production to avoid mixed content warnings
+  if (process.env.NODE_ENV === 'production' || baseUrl.includes('render.com')) {
+    return baseUrl.replace('http://', 'https://');
+  }
+  return baseUrl;
 };
 
 const computeImageUrl = (image, baseUrl) => {
