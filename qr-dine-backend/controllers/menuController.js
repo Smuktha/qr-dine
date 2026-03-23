@@ -11,6 +11,20 @@ const computeImageUrl = (image, baseUrl) => {
   return `${baseUrl}/uploads/${image}`;
 };
 
+const resolveImageData = (req, baseUrl) => {
+  if (!req.file) return { image: "", imageUrl: "" };
+
+  // For Cloudinary storage, path is the URL; for local, filename is stored
+  const imageUrl = req.file.path && req.file.path.startsWith('http')
+    ? req.file.path
+    : computeImageUrl(req.file.filename, baseUrl);
+
+  return {
+    image: req.file.filename || "",
+    imageUrl,
+  };
+};
+
 // Add menu item
 export const addMenuItem = asyncHandler(async (req, res) => {
   const { name, category, price, description } = req.body;
@@ -18,25 +32,27 @@ export const addMenuItem = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Name, category, and price are required" });
   }
 
-  const image = req.file ? req.file.filename : ""; // store filename only
-  const newItem = new MenuItem({ name, category, price, description, image });
-
-  const savedItem = await newItem.save();
   const baseUrl = getBaseUrl(req);
-  res.status(201).json({
-    ...savedItem.toObject(),
-    imageUrl: computeImageUrl(savedItem.image, baseUrl)
-  });
+  const { image, imageUrl } = resolveImageData(req, baseUrl);
+
+  const newItem = new MenuItem({ name, category, price, description, image, imageUrl });
+  const savedItem = await newItem.save();
+
+  res.status(201).json({ ...savedItem.toObject() });
 });
 
 // Get all menu items
 export const getMenuItems = asyncHandler(async (req, res) => {
   const baseUrl = getBaseUrl(req);
   const items = await MenuItem.find();
-  const itemsWithUrl = items.map(item => ({
-    ...item.toObject(),
-    imageUrl: computeImageUrl(item.image, baseUrl)
-  }));
+  const itemsWithUrl = items.map(item => {
+    const existingUrl = item.imageUrl || "";
+    const fallbackUrl = computeImageUrl(item.image, baseUrl);
+    return {
+      ...item.toObject(),
+      imageUrl: existingUrl || fallbackUrl
+    };
+  });
   res.json(itemsWithUrl);
 });
 
@@ -58,12 +74,14 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
   item.category = category || item.category;
   item.price = price || item.price;
   item.description = description || item.description;
-  if (req.file) item.image = req.file.filename;
+
+  const baseUrl = getBaseUrl(req);
+  if (req.file) {
+    const { image, imageUrl } = resolveImageData(req, baseUrl);
+    item.image = image;
+    item.imageUrl = imageUrl;
+  }
 
   const updated = await item.save();
-  const baseUrl = getBaseUrl(req);
-  res.json({
-    ...updated.toObject(),
-    imageUrl: computeImageUrl(updated.image, baseUrl)
-  });
+  res.json({ ...updated.toObject() });
 });

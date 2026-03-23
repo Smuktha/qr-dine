@@ -5,7 +5,8 @@ const menuItemSchema = new mongoose.Schema({
   category: { type: String, required: true },
   price: { type: Number, required: true },
   description: { type: String, default: "" },
-  image: { type: String, default: "" }, // filename stored
+  image: { type: String, default: "" }, // filename or public id
+  imageUrl: { type: String, default: "" }, // final URL (local or cloud)
   available: { type: Boolean, default: true },
 }, { timestamps: true });
 
