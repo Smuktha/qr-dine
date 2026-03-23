@@ -103,9 +103,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.errorMessage = '';
     this.menuService.getItems().subscribe({
       next: (items) => {
+        const backendBase = 'https://qr-dine-backend-ek2s.onrender.com';
         this.products = items.map(item => ({
           ...item,
-          imageUrl: item.image ? `https://qr-dine-backend-ek2s.onrender.com/uploads/${item.image}` : undefined
+          imageUrl: item.imageUrl
+            ? item.imageUrl
+            : item.image
+              ? item.image.startsWith('http')
+                ? item.image
+                : `${backendBase}/uploads/${item.image}`
+              : 'assets/placeholder.jpg'
         }));
 
         this.applyFilters();

@@ -6,7 +6,7 @@
 
   <div class="menu-grid" *ngIf="!loading && menuItems.length">
     <div class="menu-card" *ngFor="let item of menuItems">
-      <img *ngIf="item.image" [src]="item.image" [alt]="item.name" class="menu-img" />
+      <img *ngIf="(item.imageUrl || item.image)" [src]="item.imageUrl || item.image || 'assets/placeholder.jpg'" [alt]="item.name" class="menu-img" />
       <h3>{{ item.name }}</h3>
       <p>Category: {{ item.category }}</p>
       <p>Price: ₹{{ item.price }}</p>

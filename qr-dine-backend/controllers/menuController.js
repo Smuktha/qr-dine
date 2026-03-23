@@ -5,6 +5,12 @@ const getBaseUrl = (req) => {
   return process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
 };
 
+const computeImageUrl = (image, baseUrl) => {
+  if (!image) return "";
+  if (image.startsWith('http://') || image.startsWith('https://')) return image;
+  return `${baseUrl}/uploads/${image}`;
+};
+
 // Add menu item
 export const addMenuItem = asyncHandler(async (req, res) => {
   const { name, category, price, description } = req.body;
@@ -19,7 +25,7 @@ export const addMenuItem = asyncHandler(async (req, res) => {
   const baseUrl = getBaseUrl(req);
   res.status(201).json({
     ...savedItem.toObject(),
-    imageUrl: savedItem.image ? `${baseUrl}/uploads/${savedItem.image}` : ""
+    imageUrl: computeImageUrl(savedItem.image, baseUrl)
   });
 });
 
@@ -29,7 +35,7 @@ export const getMenuItems = asyncHandler(async (req, res) => {
   const items = await MenuItem.find();
   const itemsWithUrl = items.map(item => ({
     ...item.toObject(),
-    imageUrl: item.image ? `${baseUrl}/uploads/${item.image}` : ""
+    imageUrl: computeImageUrl(item.image, baseUrl)
   }));
   res.json(itemsWithUrl);
 });
@@ -58,6 +64,6 @@ export const updateMenuItem = asyncHandler(async (req, res) => {
   const baseUrl = getBaseUrl(req);
   res.json({
     ...updated.toObject(),
-    imageUrl: updated.image ? `${baseUrl}/uploads/${updated.image}` : ""
+    imageUrl: computeImageUrl(updated.image, baseUrl)
   });
 });
